@@ -3,6 +3,8 @@ import {
   Box,
   Button,
   Container,
+  Heading,
+  Image,
   SkeletonText,
   Text,
   Textarea,
@@ -14,7 +16,7 @@ import { useCadaver } from "./cadaver";
 const CONFIG = {
   maxCharLimit: 70,
   minCharLimit: 20,
-  lastWords: 3,
+  lastWords: 5,
   firstSentence: "El cadáver exquisito beberá el vino nuevo",
 };
 
@@ -24,14 +26,15 @@ const getLastWords = (lst) => {
 };
 
 export default function Page() {
+  // TODO: check there is some flickering
   const { cadaver, isLoading, postSentence } = useCadaver();
-
   const [localStorageData, setLocalStorageData] = useLocalStorage(
     "cadaver-exquisito",
     {}
   );
 
   const { sentence: userSentence } =
+    // TODO: Check this is working
     new Date().getDate() - new Date(localStorageData?.timestamp).getDate() <=
       1 && localStorageData;
 
@@ -58,23 +61,39 @@ export default function Page() {
   };
 
   return (
-    <Container py={12} px={4} my={4}>
+    <Container py={8} px={4} minH="100vh">
+      {/* TODO: add href to image */}
+      <Image alt="Los Años 20" src="/static/logo.png" />
+      <Heading
+        textAlign="center"
+        as="h1"
+        size="lg"
+        my={4}
+        color="gray.700"
+        fontWeight="600"
+      >
+        El Cadaver Exquisito
+      </Heading>
+
       <SkeletonText isLoaded={!isLoading} p={isLoading && 4}>
         <Box
-          maxH="400px"
+          maxH="60vh"
           p={4}
           overflow="scroll"
           textAlign="justify"
           ref={(el) => {
+            // TODO: Fix this is autoscrolling on each redner
             if (el) {
               el.scrollTop = el.scrollHeight;
             }
           }}
+          fontWeight={"600"}
         >
           <Text as="span">{CONFIG.firstSentence}</Text>{" "}
+          {/* TODO: bold or put in black my own sentence in the text */}
           {cadaver
             .join("\t")
-            .replace(getLastWords(cadaver), "")
+            .replace(submitted ? "" : getLastWords(cadaver), "")
             .split("\t")
             .map((sentence, idx) => (
               <Text
@@ -83,8 +102,8 @@ export default function Page() {
                 color={
                   submitted
                     ? idx % 2 === 0
-                      ? "darkgray"
-                      : "dimgray"
+                      ? "gray.600"
+                      : "gray.700"
                     : "transparent"
                 }
                 textShadow={submitted ? "none" : "0 0 5px rgba(0,0,0,0.5)"}
@@ -93,14 +112,12 @@ export default function Page() {
                 {sentence}{" "}
               </Text>
             ))}
-          <Text as="span">
-            {getLastWords(cadaver)}
-            {/* In case the cadaver didn't load the last entry correctly, we manually append our sentence */}
-            {submitted &&
-              !cadaver.includes(currentSentence) &&
-              ` ${currentSentence}`}
-            ...
-          </Text>
+          {!submitted && (
+            <Text as="span">
+              {getLastWords(cadaver)}
+              ...
+            </Text>
+          )}
         </Box>
       </SkeletonText>
 
@@ -109,7 +126,7 @@ export default function Page() {
           onChange={(event) => setCurrentSentence(event.target.value)}
           size="lg"
           value={currentSentence}
-          placeholder="..."
+          placeholder="continuá la frase"
           isDisabled={submitted}
           my={2}
           autoCapitalize="none"
@@ -129,11 +146,13 @@ export default function Page() {
           </Box>
         )}
 
+        {/* TODO: put this on the text area, on the button, or in a circled progress */}
         <Text
           w="100%"
           textAlign="right"
           fontSize="sm"
-          color={isCurrentSentenceValid ? "gray" : "tomato"}
+          color={isCurrentSentenceValid ? "gray.800" : "tomato"}
+          fontWeight="700"
         >
           {currentSentence.length}/{CONFIG.maxCharLimit}
         </Text>

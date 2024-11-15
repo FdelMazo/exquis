@@ -12,6 +12,7 @@
     "@chakra-ui/react": "^2.10.4",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
+    "@fontsource/cormorant-garamond": "^5.1.0",
     "framer-motion": "^11.11.17",
     "next": "^15.0.3",
     "react": "^18.3.1",
