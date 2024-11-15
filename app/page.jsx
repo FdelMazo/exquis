@@ -8,6 +8,7 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import React from "react";
+import { useLocalStorage } from "react-use";
 import { useCadaver } from "./cadaver";
 
 const CONFIG = {
@@ -25,10 +26,10 @@ const getLastWords = (lst) => {
 export default function Page() {
   const { cadaver, isLoading, postSentence } = useCadaver();
 
-  const localStorageData =
-    typeof window !== "undefined" &&
-    window.localStorage.getItem("cadaver-exquisito") &&
-    JSON.parse(window.localStorage.getItem("cadaver-exquisito"));
+  const [localStorageData, setLocalStorageData] = useLocalStorage(
+    "cadaver-exquisito",
+    {}
+  );
 
   const { sentence: userSentence } =
     new Date().getDate() - new Date(localStorageData?.timestamp).getDate() <=
@@ -49,13 +50,10 @@ export default function Page() {
   const submitSentence = async () => {
     if (!isCurrentSentenceValid || typeof window === "undefined") return;
     setSubmitted(true);
-    window.localStorage.setItem(
-      "cadaver-exquisito",
-      JSON.stringify({
-        timestamp: new Date().toISOString(),
-        sentence: currentSentence,
-      })
-    );
+    setLocalStorageData({
+      timestamp: new Date().toISOString(),
+      sentence: currentSentence,
+    });
     await postSentence(currentSentence);
   };
 
