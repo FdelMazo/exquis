@@ -86,6 +86,7 @@ export default function Page() {
             }
           }}
           fontWeight={"600"}
+          userSelect={submitted ? "auto" : "none"}
         >
           <Text as="span">{CONFIG.firstSentence}</Text>{" "}
           {/* TODO: bold or put in black my own sentence in the text */}
@@ -105,7 +106,6 @@ export default function Page() {
                     : "transparent"
                 }
                 textShadow={submitted ? "none" : "0 0 5px rgba(0,0,0,0.5)"}
-                userSelect={submitted ? "auto" : "none"}
               >
                 {sentence}{" "}
               </Text>
