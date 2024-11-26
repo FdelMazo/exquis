@@ -59,8 +59,9 @@ export default function Page() {
 
   return (
     <Container py={8} px={4} minH="100vh">
-      {/* TODO: add href to image */}
-      <Image alt="Los Años 20" src="/static/logo.png" />
+      <a href="https://losanios20.substack.com/" target="_blank">
+        <Image alt="Los Años 20" src="/static/logo.png" />
+      </a>
       <Heading
         textAlign="center"
         as="h1"
