@@ -28,10 +28,7 @@ const getLastWords = (lst) => {
 export default function Page() {
   // TODO: check there is some flickering
   const { cadaver, isLoading, postSentence } = useCadaver();
-  const [localStorageData, setLocalStorageData] = useLocalStorage(
-    "cadaver-exquisito",
-    {}
-  );
+  const [localStorageData, setLocalStorageData] = useLocalStorage("exquis", {});
 
   const { sentence: userSentence } =
     // TODO: Check this is working
