@@ -10,45 +10,70 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import React from "react";
-import { useLocalStorage } from "react-use";
-import { useCadaver } from "./cadaver";
+import { useLocalStorage } from "usehooks-ts";
+import { useCadaver } from "./use-cadaver";
 
 const CONFIG = {
-  maxCharLimit: 70,
   minCharLimit: 20,
-  lastWords: 5,
-  firstSentence: "El cadáver exquisito beberá el vino nuevo",
+  maxCharLimit: 70,
+  noOfWords: 5, // Number of words to show both at the beginning and the end of the cadaver
+  daysToKeep: 1, // One user sentence per day
 };
 
-const getLastWords = (lst) => {
-  const words = lst.join(" ").split(" ");
-  return words.slice(-CONFIG.lastWords).join(" ");
+const destructure = (sentences) => {
+  const words = sentences.join(" ").split(" ");
+  const n = CONFIG.noOfWords;
+
+  if (n * 2 >= words.length) {
+    return { beginning: words, middle: [], end: [] };
+  }
+
+  const beginning = words.slice(0, n).join(" ");
+  const middle = words.slice(n, -n).join(" ");
+  const end = words.slice(-n).join(" ");
+
+  return { beginning, middle, end };
 };
 
 export default function Page() {
-  // TODO: check there is some flickering
   const { cadaver, isLoading, postSentence } = useCadaver();
-  const [localStorageData, setLocalStorageData] = useLocalStorage("exquis", {});
+  const [submitted, setSubmitted] = React.useState(false);
+  const [currentSentence, setCurrentSentence] = React.useState("");
 
-  const { sentence: userSentence } =
-    // TODO: Check this is working
-    new Date().getDate() - new Date(localStorageData?.timestamp).getDate() <=
-      1 && localStorageData;
-
-  const [submitted, setSubmitted] = React.useState(!!userSentence);
-  const [currentSentence, setCurrentSentence] = React.useState(
-    userSentence || ""
+  const [localStorageData, setLocalStorageData] = useLocalStorage(
+    "exquis",
+    undefined,
+    {
+      initializeWithValue: false,
+    }
   );
+
+  React.useEffect(() => {
+    if (
+      !localStorageData ||
+      new Date().getDate() - new Date(localStorageData.timestamp).getDate() >
+        CONFIG.daysToKeep
+    ) {
+      return;
+    }
+
+    setSubmitted(true);
+    setCurrentSentence(localStorageData.sentence);
+  }, [localStorageData]);
 
   const isCurrentSentenceValid = React.useMemo(() => {
     return (
-      currentSentence.length >= CONFIG.minCharLimit &&
-      currentSentence.length <= CONFIG.maxCharLimit
+      currentSentence.trim().length >= CONFIG.minCharLimit &&
+      currentSentence.trim().length <= CONFIG.maxCharLimit
     );
   }, [currentSentence]);
 
+  const destructuredCadaver = React.useMemo(() => {
+    return destructure(cadaver);
+  }, [cadaver]);
+
   const submitSentence = async () => {
-    if (!isCurrentSentenceValid || typeof window === "undefined") return;
+    if (typeof window === "undefined" || !isCurrentSentenceValid) return;
     setSubmitted(true);
     setLocalStorageData({
       timestamp: new Date().toISOString(),
@@ -62,6 +87,7 @@ export default function Page() {
       <a href="https://losanios20.substack.com/" target="_blank">
         <Image alt="Los Años 20" src="/static/logo.png" />
       </a>
+
       <Heading
         textAlign="center"
         as="h1"
@@ -85,76 +111,79 @@ export default function Page() {
               el.scrollTop = el.scrollHeight;
             }
           }}
-          fontWeight={"600"}
+          fontWeight="600"
           userSelect={submitted ? "auto" : "none"}
         >
-          <Text as="span">{CONFIG.firstSentence}</Text>{" "}
-          {/* TODO: bold or put in black my own sentence in the text */}
-          {cadaver
-            .join("\t")
-            .replace(submitted ? "" : getLastWords(cadaver), "")
-            .split("\t")
-            .map((sentence, idx) => (
+          {/* TODO: highlight the submitted sentence */}
+          {submitted ? (
+            <>
+              {cadaver.map((sentence, idx) => (
+                <Text
+                  key={idx}
+                  as="span"
+                  color={idx % 2 === 0 ? "gray.700" : "gray.600"}
+                >
+                  {sentence}{" "}
+                </Text>
+              ))}
+            </>
+          ) : (
+            <>
+              <Text as="span">{destructuredCadaver.beginning} </Text>
               <Text
-                key={idx}
                 as="span"
-                color={
-                  submitted
-                    ? idx % 2 === 0
-                      ? "gray.600"
-                      : "gray.700"
-                    : "transparent"
-                }
-                textShadow={submitted ? "none" : "0 0 5px rgba(0,0,0,0.5)"}
+                textShadow="0 0 5px rgba(0,0,0,0.5)"
+                color="transparent"
               >
-                {sentence}{" "}
+                {destructuredCadaver.middle}{" "}
               </Text>
-            ))}
-          {!submitted && (
-            <Text as="span">
-              {getLastWords(cadaver)}
-              ...
-            </Text>
+              <Text as="span">{destructuredCadaver.end}...</Text>
+            </>
           )}
         </Box>
       </SkeletonText>
 
-      <>
-        <Textarea
-          onChange={(event) => setCurrentSentence(event.target.value)}
-          size="lg"
-          value={currentSentence}
-          placeholder="continuá la frase"
-          isDisabled={submitted}
-          my={2}
-          autoCapitalize="none"
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              e.preventDefault();
-              submitSentence();
-            }
-          }}
-        />
+      {!isLoading && (
+        <>
+          <Textarea
+            value={currentSentence}
+            onChange={(event) => setCurrentSentence(event.target.value)}
+            size="lg"
+            placeholder="continuá la frase"
+            isDisabled={submitted}
+            my={2}
+            autoCapitalize="none"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                submitSentence();
+              }
+            }}
+          />
 
-        {!submitted && (
-          <Box w="100%" textAlign="right">
-            <Button onClick={submitSentence} disabled={!isCurrentSentenceValid}>
-              Enviar 💀
-            </Button>
-          </Box>
-        )}
+          {!submitted && (
+            <Box w="100%" textAlign="right">
+              <Button
+                onClick={submitSentence}
+                disabled={!isCurrentSentenceValid}
+              >
+                Enviar 💀
+              </Button>
+            </Box>
+          )}
 
-        {/* TODO: put this on the text area, on the button, or in a circled progress */}
-        <Text
-          w="100%"
-          textAlign="right"
-          fontSize="sm"
-          color={isCurrentSentenceValid ? "gray.800" : "tomato"}
-          fontWeight="700"
-        >
-          {currentSentence.length}/{CONFIG.maxCharLimit}
-        </Text>
-      </>
+          {/* TODO: put this on the text area, on the button, or in a circled progress */}
+          <Text
+            w="100%"
+            textAlign="right"
+            fontSize="sm"
+            color={isCurrentSentenceValid ? "gray.800" : "tomato"}
+            fontWeight="700"
+          >
+            {currentSentence.trim().length}/{CONFIG.maxCharLimit}
+          </Text>
+        </>
+      )}
     </Container>
   );
 }
