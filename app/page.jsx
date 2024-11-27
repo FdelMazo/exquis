@@ -2,7 +2,10 @@
 import {
   Box,
   Button,
+  CircularProgress,
+  CircularProgressLabel,
   Container,
+  Flex,
   Heading,
   HStack,
   Image,
@@ -96,18 +99,19 @@ export default function Page() {
         <Image alt="Los Años 20" src="/static/logo.png" />
       </a>
 
-      <Box position="relative" my={4} border="1px solid darkgray">
+      <Box position="relative" my={4}>
         <Heading
           textAlign="center"
           as="h1"
           size="xl"
           color="gray.700"
-          fontWeight="700"
+          fontFamily="Creepster"
           style={{
             position: "absolute",
             width: "100%",
             top: "35%",
-            backgroundColor: "#efede1",
+            backgroundImage: "url('static/texture.jpg')",
+            letterSpacing: "0.15em",
           }}
         >
           El Cadaver Exquisito
@@ -134,6 +138,9 @@ export default function Page() {
 
       <SkeletonText isLoaded={!isLoading} p={isLoading && 4}>
         <Box
+          fontFamily="Almendra"
+          fontSize="xl"
+          fontWeight="700"
           maxH="38vh"
           p={4}
           overflow="scroll"
@@ -144,7 +151,6 @@ export default function Page() {
               el.scrollTop = el.scrollHeight;
             }
           }}
-          fontWeight="600"
           userSelect={submitted ? "auto" : "none"}
         >
           {/* TODO: highlight the submitted sentence */}
@@ -154,7 +160,7 @@ export default function Page() {
                 <Text
                   key={idx}
                   as="span"
-                  color={idx % 2 === 0 ? "gray.700" : "gray.600"}
+                  color={idx % 2 === 0 ? "gray.900" : "gray.600"}
                 >
                   {sentence}{" "}
                 </Text>
@@ -165,7 +171,7 @@ export default function Page() {
               <Text as="span">{destructuredCadaver.beginning} </Text>
               <Text
                 as="span"
-                textShadow="0 0 5px rgba(0,0,0,0.5)"
+                textShadow="0 0 8px rgba(0,0,0,0.5)"
                 color="transparent"
               >
                 {destructuredCadaver.middle}{" "}
@@ -179,6 +185,7 @@ export default function Page() {
       {!isLoading && (
         <>
           <Textarea
+            fontFamily="Almendra"
             value={currentSentence}
             onChange={(event) => setCurrentSentence(event.target.value)}
             size="lg"
@@ -186,6 +193,8 @@ export default function Page() {
             isDisabled={submitted}
             my={2}
             autoCapitalize="none"
+            focusBorderColor="gray.500"
+            bg="gray.50"
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 e.preventDefault();
@@ -195,26 +204,36 @@ export default function Page() {
           />
 
           {!submitted && (
-            <Box w="100%" textAlign="right">
+            <Flex
+              my={2}
+              width="100%"
+              justifyContent="space-between"
+              alignItems="center"
+              fontFamily="Almendra"
+            >
+              <CircularProgress
+                trackColor="gray.500"
+                color="gray.800"
+                value={currentSentence.trim().length}
+                max={CONFIG.maxCharLimit}
+                capIsRound
+                mx={1}
+              >
+                <CircularProgressLabel fontWeight={700} fontSize="lg">
+                  {currentSentence.trim().length}
+                </CircularProgressLabel>
+              </CircularProgress>
               <Button
+                size="md"
+                variant="outline"
+                borderColor="gray.500"
                 onClick={submitSentence}
                 disabled={!isCurrentSentenceValid}
               >
                 Enviar 💀
               </Button>
-            </Box>
+            </Flex>
           )}
-
-          {/* TODO: put this on the text area, on the button, or in a circled progress */}
-          <Text
-            w="100%"
-            textAlign="right"
-            fontSize="sm"
-            color={isCurrentSentenceValid ? "gray.800" : "tomato"}
-            fontWeight="700"
-          >
-            {currentSentence.trim().length}/{CONFIG.maxCharLimit}
-          </Text>
         </>
       )}
     </Container>

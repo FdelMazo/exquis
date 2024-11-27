@@ -1,3 +1,6 @@
+import "@fontsource/almendra";
+import "@fontsource/creepster";
+import "@fontsource/libre-baskerville";
 import { Providers } from "./providers";
 
 export default function RootLayout({ children }) {
