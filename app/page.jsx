@@ -4,6 +4,7 @@ import {
   Button,
   Container,
   Heading,
+  HStack,
   Image,
   SkeletonText,
   Text,
@@ -25,7 +26,7 @@ const destructure = (sentences) => {
   const n = CONFIG.noOfWords;
 
   if (n * 2 >= words.length) {
-    return { beginning: words, middle: [], end: [] };
+    return { beginning: words.join(" "), middle: [], end: [] };
   }
 
   const beginning = words.slice(0, n).join(" ");
@@ -39,6 +40,13 @@ export default function Page() {
   const { cadaver, isLoading, postSentence } = useCadaver();
   const [submitted, setSubmitted] = React.useState(false);
   const [currentSentence, setCurrentSentence] = React.useState("");
+  const [randoms, setRandoms] = React.useState([1, 2, 3]);
+
+  React.useEffect(() => {
+    setRandoms(
+      Array.from({ length: 3 }, () => Math.floor(Math.random() * 20) + 1)
+    );
+  }, []);
 
   const [localStorageData, setLocalStorageData] = useLocalStorage(
     "exquis",
@@ -88,20 +96,45 @@ export default function Page() {
         <Image alt="Los Años 20" src="/static/logo.png" />
       </a>
 
-      <Heading
-        textAlign="center"
-        as="h1"
-        size="lg"
-        my={4}
-        color="gray.700"
-        fontWeight="600"
-      >
-        El Cadaver Exquisito
-      </Heading>
+      <Box position="relative" my={4} border="1px solid darkgray">
+        <Heading
+          textAlign="center"
+          as="h1"
+          size="xl"
+          color="gray.700"
+          fontWeight="700"
+          style={{
+            position: "absolute",
+            width: "100%",
+            top: "35%",
+            backgroundColor: "#efede1",
+          }}
+        >
+          El Cadaver Exquisito
+        </Heading>
+
+        <HStack justifyContent="center" gap={0}>
+          <Image
+            alt="Cadaver Exquisito"
+            src={`static/exquisite-corpse/${randoms[0]}.jpg`}
+            w="35%"
+          />
+          <Image
+            alt="Cadaver Exquisito"
+            src={`static/exquisite-corpse/${randoms[1]}.jpg`}
+            w="35%"
+          />
+          <Image
+            alt="Cadaver Exquisito"
+            src={`static/exquisite-corpse/${randoms[2]}.jpg`}
+            w="35%"
+          />
+        </HStack>
+      </Box>
 
       <SkeletonText isLoaded={!isLoading} p={isLoading && 4}>
         <Box
-          maxH="60vh"
+          maxH="38vh"
           p={4}
           overflow="scroll"
           textAlign="justify"
