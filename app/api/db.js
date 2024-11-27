@@ -11,7 +11,14 @@ const start = async () => {
 
   const client = createClient();
   client.on("error", (err) => console.log("Redis Client Error", err));
-  await client.connect();
+  if (process.env.NODE_ENV === "production") {
+    await client.connect({
+      url: process.env.REDIS_URL,
+    });
+  } else {
+    await client.connect();
+  }
+
   db = client;
   return db;
 };
