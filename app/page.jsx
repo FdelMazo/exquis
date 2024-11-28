@@ -124,13 +124,11 @@ export default function Page() {
           size="xl"
           color="gray.700"
           fontFamily="Creepster"
-          style={{
-            position: "absolute",
-            width: "100%",
-            top: "35%",
-            backgroundImage: "url('static/texture.jpg')",
-            letterSpacing: "0.15em",
-          }}
+          width="100%"
+          position="absolute"
+          top="35%"
+          backgroundImage="url('static/texture.jpg')"
+          letterSpacing="0.15em"
         >
           El Cadaver Exquisito
         </Heading>
@@ -139,17 +137,17 @@ export default function Page() {
           <Image
             alt="Cadaver Exquisito"
             src={`static/exquisite-corpse/${randoms[0]}.jpg`}
-            w="35%"
+            w="33%"
           />
           <Image
             alt="Cadaver Exquisito"
             src={`static/exquisite-corpse/${randoms[1]}.jpg`}
-            w="35%"
+            w="33%"
           />
           <Image
             alt="Cadaver Exquisito"
             src={`static/exquisite-corpse/${randoms[2]}.jpg`}
-            w="35%"
+            w="33%"
           />
         </HStack>
       </Box>
