@@ -1,10 +1,5 @@
 "use client";
 import {
-  Accordion,
-  AccordionButton,
-  AccordionIcon,
-  AccordionItem,
-  AccordionPanel,
   Box,
   Button,
   CircularProgress,
@@ -12,14 +7,13 @@ import {
   Container,
   Flex,
   Heading,
-  HStack,
   Image,
   SkeletonText,
   Text,
   Textarea,
 } from "@chakra-ui/react";
 import React from "react";
-import { FaGithub, FaInstagram, FaTwitter } from "react-icons/fa";
+import { FaInstagram, FaTwitter } from "react-icons/fa";
 import { useLocalStorage } from "usehooks-ts";
 import { useCadaver } from "./use-cadaver";
 
@@ -49,13 +43,6 @@ export default function Page() {
   const { cadaver, isLoading, postSentence } = useCadaver();
   const [submitted, setSubmitted] = React.useState(false);
   const [currentSentence, setCurrentSentence] = React.useState("");
-  const [randoms, setRandoms] = React.useState([1, 2, 3]);
-
-  React.useEffect(() => {
-    setRandoms(
-      Array.from({ length: 3 }, () => Math.floor(Math.random() * 20) + 1)
-    );
-  }, []);
 
   const [localStorageData, setLocalStorageData] = useLocalStorage(
     "exquis",
@@ -109,91 +96,58 @@ export default function Page() {
   return (
     <Container py={8} px={4} minH="100vh">
       <style>
-        {`@keyframes typing {
-                from {
-              color: transparent;
-            }
-            to {
-              color: #91191c;
-            }
-          }`}
+        {`@font-face {
+            font-family: 'Futura';
+            src: url('/static/Futura Medium.ttf') format('truetype');
+        }
+
+        @keyframes typing {
+              from {
+            color: transparent;
+          }
+          to {
+            color: #91191c;
+          }
+        }`}
       </style>
 
-      <a href="https://losanios20.substack.com/" target="_blank">
+      {/* TODO: point to https://losanios20.substack.com/ */}
+      <a href="http://instagram.com/losanios20" target="_blank">
         <Image alt="Los Años 20" src="/static/logo.png" />
       </a>
 
-      <Box position="relative" my={4}>
+      <Box my={4} textAlign="center">
         <Heading
-          textAlign="center"
           as="h1"
           size="xl"
           color="gray.700"
-          fontFamily="Creepster"
-          width="100%"
-          position="absolute"
-          top="35%"
-          backgroundImage="url('static/texture.jpg')"
-          letterSpacing={{ base: "0.05em", sm: "0.15em" }}
+          style={{
+            fontFamily: "Futura, sans-serif",
+          }}
         >
-          El Cadáver Exquisito
+          Cadáver Exquisito
         </Heading>
 
-        <HStack justifyContent="center" gap={0}>
-          <Image
-            alt="Cadaver Exquisito"
-            src={`static/exquisite-corpse/${randoms[0]}.jpg`}
-            w="33%"
-          />
-          <Image
-            alt="Cadaver Exquisito"
-            src={`static/exquisite-corpse/${randoms[1]}.jpg`}
-            w="33%"
-          />
-          <Image
-            alt="Cadaver Exquisito"
-            src={`static/exquisite-corpse/${randoms[2]}.jpg`}
-            w="33%"
-          />
-        </HStack>
+        <Heading
+          size="md"
+          color="#91191c"
+          style={{
+            fontFamily: "Futura, sans-serif",
+          }}
+        >
+          Un texto colectivo de los años 20
+        </Heading>
       </Box>
-
-      <Accordion allowToggle border="1px solid" borderColor="gray.400" mx={4}>
-        <AccordionItem fontFamily="Almendra" border="none">
-          <h2>
-            <AccordionButton>
-              <Box flex="1" textAlign="left" fontWeight={700} fontSize="lg">
-                Este es un Cadáver Exquisito,
-              </Box>
-              <AccordionIcon />
-            </AccordionButton>
-          </h2>
-          <AccordionPanel>
-            <Text fontWeight={700}>
-              un juego de escritura típico de los (otros) años 20, con el que
-              los surrealistas buscaban ir más allá del mundo aparente a través
-              de los sueños, el inconsciente y el azar.
-            </Text>
-            <Text fontWeight={700} my={2}>
-              Alguien empezaba una frase y otro la seguía. El tercero tenía que
-              continuar lo que había escrito el segundo, pero sin leer lo del
-              primero. Así se iba formando a ciegas un texto que trascendía los
-              mecanismos de la razón.
-            </Text>
-          </AccordionPanel>
-        </AccordionItem>
-      </Accordion>
 
       <SkeletonText isLoaded={!isLoading} p={isLoading && 4}>
         <Box
-          fontFamily="Almendra"
           fontSize="xl"
-          fontWeight="700"
           maxH="38vh"
           p={4}
           overflow="scroll"
           style={{
             scrollbarWidth: "none",
+            fontFamily: "Times New Roman, sans-serif",
           }}
           textAlign="justify"
           ref={cadaverRef}
@@ -248,11 +202,13 @@ export default function Page() {
       {!isLoading && (
         <>
           <Textarea
-            fontFamily="Almendra"
+            style={{
+              fontFamily: "Times New Roman, sans-serif",
+            }}
             value={currentSentence}
             onChange={(event) => setCurrentSentence(event.target.value)}
             size="lg"
-            placeholder="continuá la historia"
+            placeholder="Continuá la frase que alguien escribió antes que vos"
             isDisabled={submitted}
             my={2}
             autoCapitalize="none"
@@ -271,26 +227,38 @@ export default function Page() {
             width="100%"
             justifyContent="space-between"
             alignItems="center"
-            fontFamily="Almendra"
+            style={{
+              fontFamily: "Times New Roman, sans-serif",
+            }}
           >
             {!submitted && (
-              <CircularProgress
-                trackColor="gray.500"
-                color="gray.800"
-                value={currentSentence.trim().length}
-                max={CONFIG.maxCharLimit}
-                capIsRound
-                mx={1}
-              >
-                <CircularProgressLabel fontWeight={700} fontSize="lg">
-                  {currentSentence.trim().length}
-                </CircularProgressLabel>
-              </CircularProgress>
+              <>
+                <CircularProgress
+                  trackColor="gray.500"
+                  color={
+                    currentSentence.trim().length < 20 ? "tomato" : "gray.800"
+                  }
+                  fontWeight="700"
+                  value={currentSentence.trim().length}
+                  max={CONFIG.maxCharLimit}
+                  capIsRound
+                  mx={1}
+                >
+                  <CircularProgressLabel>
+                    {currentSentence.trim().length}
+                  </CircularProgressLabel>
+                </CircularProgress>
+                <Text fontSize="xs">
+                  {CONFIG.minCharLimit} {CONFIG.maxCharLimit}
+                </Text>
+              </>
             )}
+
             <Flex w="100%" justifyContent="center" gap={2}>
-              <a href="https://github.com/FdelMazo/exquis" target="_blank">
+              {/* TODO: encontrar lugar */}
+              {/* <a href="https://github.com/FdelMazo/exquis" target="_blank">
                 <FaGithub color="#91191c" size={20} />
-              </a>
+              </a> */}
               <a href="http://x.com/losanios20" target="_blank">
                 <FaTwitter color="#91191c" size={20} />
               </a>
