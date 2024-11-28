@@ -183,10 +183,14 @@ export default function Page() {
                   (letter, idx) => (
                     <span
                       key={idx}
-                      style={{
-                        color: "transparent",
-                        animation: `typing 1s ${idx / 10}s forwards`,
-                      }}
+                      style={
+                        cadaver[cadaver.length - 1] == currentSentence
+                          ? {
+                              color: "transparent",
+                              animation: `typing 1s ${idx / 10}s forwards`,
+                            }
+                          : {}
+                      }
                     >
                       {letter}
                     </span>
