@@ -128,7 +128,7 @@ export default function Page() {
           position="absolute"
           top="35%"
           backgroundImage="url('static/texture.jpg')"
-          letterSpacing="0.15em"
+          letterSpacing={{ base: "0.05em", sm: "0.15em" }}
         >
           El Cadaver Exquisito
         </Heading>
