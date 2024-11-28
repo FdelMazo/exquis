@@ -14,6 +14,7 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import React from "react";
+import { FaGithub, FaInstagram, FaTwitter } from "react-icons/fa";
 import { useLocalStorage } from "usehooks-ts";
 import { useCadaver } from "./use-cadaver";
 
@@ -234,14 +235,14 @@ export default function Page() {
             }}
           />
 
-          {!submitted && (
-            <Flex
-              my={2}
-              width="100%"
-              justifyContent="space-between"
-              alignItems="center"
-              fontFamily="Almendra"
-            >
+          <Flex
+            my={2}
+            width="100%"
+            justifyContent="space-between"
+            alignItems="center"
+            fontFamily="Almendra"
+          >
+            {!submitted && (
               <CircularProgress
                 trackColor="gray.500"
                 color="gray.800"
@@ -254,6 +255,19 @@ export default function Page() {
                   {currentSentence.trim().length}
                 </CircularProgressLabel>
               </CircularProgress>
+            )}
+            <Flex w="100%" justifyContent="center" gap={2}>
+              <a href="https://github.com/FdelMazo/exquis" target="_blank">
+                <FaGithub color="#91191c" size={20} />
+              </a>
+              <a href="http://x.com/losanios20" target="_blank">
+                <FaTwitter color="#91191c" size={20} />
+              </a>
+              <a href="http://instagram.com/losanios20" target="_blank">
+                <FaInstagram color="#91191c" size={20} />
+              </a>
+            </Flex>
+            {!submitted && (
               <Button
                 size="md"
                 variant="outline"
@@ -263,8 +277,8 @@ export default function Page() {
               >
                 Enviar 💀
               </Button>
-            </Flex>
-          )}
+            )}
+          </Flex>
         </>
       )}
     </Container>
