@@ -93,6 +93,13 @@ export default function Page() {
     await postSentence(currentSentence);
   };
 
+  const cadaverRef = React.useRef(null);
+  React.useEffect(() => {
+    if (cadaverRef.current) {
+      cadaverRef.current.scrollTop = cadaverRef.current.scrollHeight;
+    }
+  }, [cadaver]);
+
   return (
     <Container py={8} px={4} minH="100vh">
       <style>
@@ -155,13 +162,11 @@ export default function Page() {
           maxH="38vh"
           p={4}
           overflow="scroll"
-          textAlign="justify"
-          ref={(el) => {
-            // TODO: Fix this is autoscrolling on each redner
-            if (el) {
-              el.scrollTop = el.scrollHeight;
-            }
+          style={{
+            scrollbarWidth: "none",
           }}
+          textAlign="justify"
+          ref={cadaverRef}
           userSelect={submitted ? "auto" : "none"}
         >
           {submitted ? (
