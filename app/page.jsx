@@ -95,6 +95,17 @@ export default function Page() {
 
   return (
     <Container py={8} px={4} minH="100vh">
+      <style>
+        {`@keyframes typing {
+                from {
+              color: transparent;
+            }
+            to {
+              color: #91191c;
+            }
+          }`}
+      </style>
+
       <a href="https://losanios20.substack.com/" target="_blank">
         <Image alt="Los Años 20" src="/static/logo.png" />
       </a>
@@ -153,10 +164,9 @@ export default function Page() {
           }}
           userSelect={submitted ? "auto" : "none"}
         >
-          {/* TODO: highlight the submitted sentence */}
           {submitted ? (
             <>
-              {cadaver.map((sentence, idx) => (
+              {cadaver.slice(0, -1).map((sentence, idx) => (
                 <Text
                   key={idx}
                   as="span"
@@ -164,7 +174,21 @@ export default function Page() {
                 >
                   {sentence}{" "}
                 </Text>
-              ))}
+              ))}{" "}
+              {cadaver[cadaver.length - 1] &&
+                [...cadaver[cadaver.length - 1].split(""), "..."].map(
+                  (letter, idx) => (
+                    <span
+                      key={idx}
+                      style={{
+                        color: "transparent",
+                        animation: `typing 1s ${idx / 10}s forwards`,
+                      }}
+                    >
+                      {letter}
+                    </span>
+                  )
+                )}
             </>
           ) : (
             <>
