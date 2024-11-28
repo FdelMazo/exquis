@@ -136,7 +136,7 @@ export default function Page() {
           backgroundImage="url('static/texture.jpg')"
           letterSpacing={{ base: "0.05em", sm: "0.15em" }}
         >
-          El Cadaver Exquisito
+          El Cadáver Exquisito
         </Heading>
 
         <HStack justifyContent="center" gap={0}>
@@ -158,19 +158,19 @@ export default function Page() {
         </HStack>
       </Box>
 
-      <Accordion allowToggle border="1px solid" borderColor="gray.400">
+      <Accordion allowToggle border="1px solid" borderColor="gray.400" mx={4}>
         <AccordionItem fontFamily="Almendra" border="none">
           <h2>
             <AccordionButton>
               <Box flex="1" textAlign="left" fontWeight={700} fontSize="lg">
-                Este es un Cadáver Exquisito...
+                Este es un Cadáver Exquisito,
               </Box>
               <AccordionIcon />
             </AccordionButton>
           </h2>
           <AccordionPanel>
             <Text fontWeight={700}>
-              Un juego de escritura típico de los (otros) años 20, con el que
+              un juego de escritura típico de los (otros) años 20, con el que
               los surrealistas buscaban ir más allá del mundo aparente a través
               de los sueños, el inconsciente y el azar.
             </Text>
@@ -179,11 +179,6 @@ export default function Page() {
               continuar lo que había escrito el segundo, pero sin leer lo del
               primero. Así se iba formando a ciegas un texto que trascendía los
               mecanismos de la razón.
-            </Text>
-            <Text fontWeight={700}>
-              Escribí una frase que continúe lo que alguien escribió
-              inmediatamente antes que vos. Cuando lo hagas se revelará todo lo
-              anterior, un texto colectivo de estos años 20.
             </Text>
           </AccordionPanel>
         </AccordionItem>
@@ -257,7 +252,7 @@ export default function Page() {
             value={currentSentence}
             onChange={(event) => setCurrentSentence(event.target.value)}
             size="lg"
-            placeholder="continuá la frase"
+            placeholder="continuá la historia"
             isDisabled={submitted}
             my={2}
             autoCapitalize="none"
