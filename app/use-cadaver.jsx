@@ -10,10 +10,6 @@ export const GET = async (url, options) =>
 export const POST = async (url, options) =>
   fetcher(url, { method: "POST", ...options });
 
-// TODO: things to test if performance isn't good
-// - use { cache: "no-cache" } in the fetcher
-// - use fallback data on mutate
-
 export const useCadaver = () => {
   const {
     data: cadaver,
