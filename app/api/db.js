@@ -11,11 +11,14 @@ const start = async () => {
 
   const client = createClient();
   client.on("error", (err) => console.log("Redis Client Error", err));
+  console.log("STARTING DB ON ", process.env.NODE_ENV, process.env.REDIS_URL);
   if (process.env.NODE_ENV === "production") {
+    console.log("YES I AM HERE");
     await client.connect({
       url: process.env.REDIS_URL,
     });
   } else {
+    console.log("NO I AM NOT HERE");
     await client.connect();
   }
 
