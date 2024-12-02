@@ -55,8 +55,8 @@ export default function Page() {
   React.useEffect(() => {
     if (
       !localStorageData ||
-      new Date().getDate() - new Date(localStorageData.timestamp).getDate() >
-        CONFIG.daysToKeep
+      new Date() - new Date(localStorageData.timestamp) >
+        CONFIG.daysToKeep * 1000 * 60 * 60 * 24
     ) {
       return;
     }
