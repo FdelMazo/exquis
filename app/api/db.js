@@ -1,7 +1,7 @@
 import { createClient } from "redis";
 
 const CURRENT_CADAVER =
-  process.env.NODE_ENV === "development" ? "dev-alpha" : "prod-alpha";
+  process.env.NODE_ENV === "development" ? "dev-alpha" : "prod-beta";
 
 let db = null;
 const start = async () => {
